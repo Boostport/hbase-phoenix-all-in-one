@@ -3,13 +3,31 @@ MAINTAINER Francis Chuang <francis.chuang@boostport.com>
 
 ENV HBASE_VERSION=1.1.5 HBASE_MINOR_VERSION=1.1 PHOENIX_VERSION=4.7.0
 
-RUN apk --no-cache --update add bash python tar \
- && apk --no-cache --update --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ add xmlstarlet \
+RUN apk --no-cache --update add bash ca-certificates gnupg python tar \
+ && apk --no-cache --update --repository https://dl-3.alpinelinux.org/alpine/edge/testing/ add xmlstarlet \
+\
+# Set up directories
  && mkdir -p /opt/hbase \
  && mkdir -p /opt/phoenix \
  && mkdir -p /opt/phoenix-server \
- && wget -q -O - http://apache.mirror.digitalpacific.com.au/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz | tar -xzf - -C /opt/hbase  --strip-components 1 \
- && wget -q -O - http://apache.uberglobalmirror.com/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz | tar -xzf - -C /opt/phoenix --strip-components 1 \
+\
+# Download HBase
+ && wget -O /tmp/KEYS http://www-us.apache.org/dist/hbase/KEYS \
+ && gpg --import /tmp/KEYS \
+ && wget -q -O /tmp/hbase.tar.gz http://apache.mirror.digitalpacific.com.au/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz \
+ && wget -O /tmp/hbase.asc http://www-us.apache.org/dist/hbase/stable/hbase-$HBASE_VERSION-bin.tar.gz.asc \
+ && gpg --verify /tmp/hbase.asc /tmp/hbase.tar.gz \
+ && tar -xzf /tmp/hbase.tar.gz -C /opt/hbase  --strip-components 1 \
+\
+# Download Phoenix
+ && wget -O /tmp/KEYS http://www-us.apache.org/dist/phoenix/KEYS \
+ && gpg --import /tmp/KEYS \
+ && wget -q -O /tmp/phoenix.tar.gz http://apache.uberglobalmirror.com/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
+ && wget -O /tmp/phoenix.asc http://www-eu.apache.org/dist/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
+ && gpg --verify /tmp/phoenix.asc /tmp/phoenix.tar.gz \
+ && tar -xzf /tmp/phoenix.tar.gz -C /opt/phoenix --strip-components 1 \
+\
+# Set up HBase and Phoenix
  && mv /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-server.jar /opt/hbase/lib/ \
  && cp /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-client.jar /opt/hbase/lib/ \
  && mv /opt/phoenix/bin/tephra /opt/hbase/bin/tephra \
@@ -17,6 +35,9 @@ RUN apk --no-cache --update add bash python tar \
  && mv /opt/phoenix/phoenix-server-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-runnable.jar /opt/phoenix-server/ \
  && mv /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-client.jar /opt/phoenix-server/ \
  && mv /opt/phoenix/bin /opt/phoenix-server/bin \
+\
+# Clean up
+ && apk del gnupg \
  && rm -rf /opt/phoenix /tmp/* /var/tmp/* /var/cache/apk/*
 
 EXPOSE 8765
