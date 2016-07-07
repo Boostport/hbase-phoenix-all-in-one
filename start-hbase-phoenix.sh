@@ -32,11 +32,11 @@ export HBASE_CP=/opt/hbase/lib
 export HBASE_HOME=/opt/hbase
 
 function clean_up {
-	/opt/hbase/bin/stop-hbase.sh
+    /opt/hbase/bin/stop-hbase.sh
     /opt/phoenix-server/bin/queryserver.py stop
     /opt/hbase/bin/tephra stop
 
-	exit
+    exit
 }
 
 trap clean_up SIGINT SIGTERM
