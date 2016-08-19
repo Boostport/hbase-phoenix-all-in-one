@@ -32,7 +32,7 @@ RUN apk --no-cache --update add bash ca-certificates gnupg python tar \
  && cp /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-client.jar /opt/hbase/lib/ \
  && mv /opt/phoenix/bin/tephra /opt/hbase/bin/tephra \
  && mv /opt/phoenix/bin/tephra-env.sh /opt/hbase/bin/tephra-env.sh \
- && mv /opt/phoenix/phoenix-server-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-runnable.jar /opt/phoenix-server/ \
+ && mv /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-queryserver.jar /opt/phoenix-server/ \
  && mv /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-client.jar /opt/phoenix-server/ \
  && mv /opt/phoenix/bin /opt/phoenix-server/bin \
 \
