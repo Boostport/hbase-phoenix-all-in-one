@@ -1,4 +1,4 @@
-FROM java:8-jre-alpine
+FROM openjdk:8-jre-alpine
 MAINTAINER Francis Chuang <francis.chuang@boostport.com>
 
 ENV HBASE_VERSION=1.2.2 HBASE_MINOR_VERSION=1.2 PHOENIX_VERSION=4.8.0
