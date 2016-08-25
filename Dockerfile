@@ -3,8 +3,9 @@ MAINTAINER Francis Chuang <francis.chuang@boostport.com>
 
 ENV HBASE_VERSION=1.2.2 HBASE_MINOR_VERSION=1.2 PHOENIX_VERSION=4.8.0
 
-RUN apk --no-cache --update add bash ca-certificates gnupg python tar \
+RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
  && apk --no-cache --update --repository https://dl-3.alpinelinux.org/alpine/edge/testing/ add xmlstarlet \
+ && update-ca-certificates \
 \
 # Set up directories
  && mkdir -p /opt/hbase \
@@ -12,18 +13,18 @@ RUN apk --no-cache --update add bash ca-certificates gnupg python tar \
  && mkdir -p /opt/phoenix-server \
 \
 # Download HBase
- && wget -O /tmp/KEYS http://www-us.apache.org/dist/hbase/KEYS \
+ && wget -O /tmp/KEYS https://www-us.apache.org/dist/hbase/KEYS \
  && gpg --import /tmp/KEYS \
  && wget -q -O /tmp/hbase.tar.gz http://apache.mirror.digitalpacific.com.au/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz \
- && wget -O /tmp/hbase.asc http://www-us.apache.org/dist/hbase/stable/hbase-$HBASE_VERSION-bin.tar.gz.asc \
+ && wget -O /tmp/hbase.asc https://www-us.apache.org/dist/hbase/stable/hbase-$HBASE_VERSION-bin.tar.gz.asc \
  && gpg --verify /tmp/hbase.asc /tmp/hbase.tar.gz \
  && tar -xzf /tmp/hbase.tar.gz -C /opt/hbase  --strip-components 1 \
 \
 # Download Phoenix
- && wget -O /tmp/KEYS http://www-us.apache.org/dist/phoenix/KEYS \
+ && wget -O /tmp/KEYS https://www-us.apache.org/dist/phoenix/KEYS \
  && gpg --import /tmp/KEYS \
  && wget -q -O /tmp/phoenix.tar.gz http://apache.uberglobalmirror.com/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
- && wget -O /tmp/phoenix.asc http://www-eu.apache.org/dist/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
+ && wget -O /tmp/phoenix.asc https://www-eu.apache.org/dist/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
  && gpg --verify /tmp/phoenix.asc /tmp/phoenix.tar.gz \
  && tar -xzf /tmp/phoenix.tar.gz -C /opt/phoenix --strip-components 1 \
 \
@@ -37,7 +38,7 @@ RUN apk --no-cache --update add bash ca-certificates gnupg python tar \
  && mv /opt/phoenix/bin /opt/phoenix-server/bin \
 \
 # Clean up
- && apk del gnupg \
+ && apk del gnupg openssl tar \
  && rm -rf /opt/phoenix /tmp/* /var/tmp/* /var/cache/apk/*
 
 EXPOSE 8765
