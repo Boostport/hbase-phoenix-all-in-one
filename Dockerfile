@@ -4,7 +4,7 @@ MAINTAINER Francis Chuang <francis.chuang@boostport.com>
 ENV HBASE_VERSION=1.2.2 HBASE_MINOR_VERSION=1.2 PHOENIX_VERSION=4.8.0
 
 RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
- && apk --no-cache --update --repository https://dl-3.alpinelinux.org/alpine/edge/testing/ add xmlstarlet \
+ && apk --no-cache --update --repository https://dl-3.alpinelinux.org/alpine/edge/community/ add xmlstarlet \
  && update-ca-certificates \
 \
 # Set up directories
