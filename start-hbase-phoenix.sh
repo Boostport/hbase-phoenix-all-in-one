@@ -23,6 +23,7 @@ addConfig $HBASE_SITE "hbase.rpc.controllerfactory.class" "org.apache.hadoop.hba
 addConfig $HBASE_SITE "data.tx.snapshot.dir" "/tmp/tephra/snapshots"
 addConfig $HBASE_SITE "data.tx.timeout" "60"
 addConfig $HBASE_SITE "phoenix.transactions.enabled" true
+addConfig $HBASE_SITE "phoenix.schema.isNamespaceMappingEnabled" true
 
 export HBASE_CONF_DIR=/opt/hbase/conf
 export HBASE_CP=/opt/hbase/lib
