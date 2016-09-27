@@ -14,10 +14,10 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
 \
 # Download HBase
  && wget -O /tmp/KEYS https://www-us.apache.org/dist/hbase/KEYS \
- && gpg --import /tmp/KEYS \
+# && gpg --import /tmp/KEYS \
  && wget -q -O /tmp/hbase.tar.gz http://apache.mirror.digitalpacific.com.au/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz \
  && wget -O /tmp/hbase.asc https://www-us.apache.org/dist/hbase/stable/hbase-$HBASE_VERSION-bin.tar.gz.asc \
- && gpg --verify /tmp/hbase.asc /tmp/hbase.tar.gz \
+# && gpg --verify /tmp/hbase.asc /tmp/hbase.tar.gz \
  && tar -xzf /tmp/hbase.tar.gz -C /opt/hbase  --strip-components 1 \
 \
 # Download Phoenix
