@@ -23,10 +23,8 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
 # Download Phoenix
  && wget -O /tmp/KEYS https://www-us.apache.org/dist/phoenix/KEYS \
  && gpg --import /tmp/KEYS \
- && wget -q -O /tmp/phoenix.tar.gz https://dist.apache.org/repos/dist/dev/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-rc0/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
- && wget -O /tmp/phoenix.asc https://dist.apache.org/repos/dist/dev/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-rc0/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
- #&& wget -q -O /tmp/phoenix.tar.gz http://apache.uberglobalmirror.com/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
- #&& wget -O /tmp/phoenix.asc https://www-eu.apache.org/dist/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
+ && wget -q -O /tmp/phoenix.tar.gz http://apache.uberglobalmirror.com/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
+ && wget -O /tmp/phoenix.asc https://www-eu.apache.org/dist/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
  && gpg --verify /tmp/phoenix.asc /tmp/phoenix.tar.gz \
  && tar -xzf /tmp/phoenix.tar.gz -C /opt/phoenix --strip-components 1 \
 \
@@ -38,6 +36,10 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
  && mv /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-queryserver.jar /opt/phoenix-server/ \
  && mv /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-client.jar /opt/phoenix-server/ \
  && mv /opt/phoenix/bin /opt/phoenix-server/bin \
+\
+# Replace hbase's guava 12 jar with the guava 13 jar. Remove when TEPHRA-181 is resolved.
+ && rm /opt/hbase/lib/guava-12.0.1.jar \
+ && wget -P /opt/hbase/lib https://search.maven.org/remotecontent?filepath=com/google/guava/guava/13.0.1/guava-13.0.1.jar \
 \
 # Clean up
  && apk del gnupg openssl tar \
