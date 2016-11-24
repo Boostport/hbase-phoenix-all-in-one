@@ -23,10 +23,8 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
 # Download Phoenix
  && wget -O /tmp/KEYS https://www-us.apache.org/dist/phoenix/KEYS \
  && gpg --import /tmp/KEYS \
- && wget -q -O /tmp/phoenix.tar.gz https://dist.apache.org/repos/dist/dev/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-rc4/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
- && wget -O /tmp/phoenix.asc https://dist.apache.org/repos/dist/dev/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-rc4/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
- #&& wget -q -O /tmp/phoenix.tar.gz http://apache.uberglobalmirror.com/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
- #&& wget -O /tmp/phoenix.asc https://www-eu.apache.org/dist/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
+ && wget -q -O /tmp/phoenix.tar.gz http://apache.uberglobalmirror.com/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz \
+ && wget -O /tmp/phoenix.asc https://www-eu.apache.org/dist/phoenix/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION/bin/apache-phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-bin.tar.gz.asc \
  && gpg --verify /tmp/phoenix.asc /tmp/phoenix.tar.gz \
  && tar -xzf /tmp/phoenix.tar.gz -C /opt/phoenix --strip-components 1 \
 \
