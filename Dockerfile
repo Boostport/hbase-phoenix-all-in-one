@@ -1,9 +1,11 @@
 FROM openjdk:8-jre-alpine
 MAINTAINER Francis Chuang <francis.chuang@boostport.com>
 
-ENV HBASE_VERSION=1.2.5 HBASE_MINOR_VERSION=1.2 PHOENIX_VERSION=4.10.0
+ENV HBASE_VERSION=1.2.6 HBASE_MINOR_VERSION=1.2 PHOENIX_VERSION=4.11.0
 
-RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
+# The busybox wget is broken, so we install a vanilla wget. Remove when resolved.
+# See https://github.com/gliderlabs/docker-alpine/issues/292
+RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar wget \
  && apk --no-cache --update --repository https://dl-3.alpinelinux.org/alpine/edge/community/ add xmlstarlet \
  && update-ca-certificates \
 \
@@ -16,7 +18,7 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar \
  && wget -O /tmp/KEYS https://www-us.apache.org/dist/hbase/KEYS \
  && gpg --import /tmp/KEYS \
  && wget -q -O /tmp/hbase.tar.gz http://apache.mirror.digitalpacific.com.au/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz \
- && wget -O /tmp/hbase.asc https://www-us.apache.org/dist/hbase/stable/hbase-$HBASE_VERSION-bin.tar.gz.asc \
+ && wget -O /tmp/hbase.asc https://www-us.apache.org/dist/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz.asc \
  && gpg --verify /tmp/hbase.asc /tmp/hbase.tar.gz \
  && tar -xzf /tmp/hbase.tar.gz -C /opt/hbase  --strip-components 1 \
 \
