@@ -1,7 +1,7 @@
 FROM openjdk:8-jre-alpine
 MAINTAINER Francis Chuang <francis.chuang@boostport.com>
 
-ENV HBASE_VERSION=1.2.6 HBASE_MINOR_VERSION=1.2 PHOENIX_VERSION=4.11.0
+ENV HBASE_VERSION=1.3.1 HBASE_MINOR_VERSION=1.3 PHOENIX_VERSION=4.12.0
 
 # The busybox wget is broken, so we install a vanilla wget. Remove when resolved.
 # See https://github.com/gliderlabs/docker-alpine/issues/292
