@@ -20,6 +20,7 @@ addConfig () {
 addConfig $HBASE_SITE "hbase.regionserver.wal.codec" "org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec"
 addConfig $HBASE_SITE "hbase.region.server.rpc.scheduler.factory.class" "org.apache.hadoop.hbase.ipc.PhoenixRpcSchedulerFactory"
 addConfig $HBASE_SITE "hbase.rpc.controllerfactory.class" "org.apache.hadoop.hbase.ipc.controller.ServerRpcControllerFactory"
+addConfig $HBASE_SITE "hbase.unsafe.stream.capability.enforce" "false"
 addConfig $HBASE_SITE "data.tx.snapshot.dir" "/tmp/tephra/snapshots"
 addConfig $HBASE_SITE "data.tx.timeout" "60"
 addConfig $HBASE_SITE "phoenix.transactions.enabled" true
