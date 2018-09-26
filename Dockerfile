@@ -40,9 +40,9 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar wg
  && mv /opt/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MINOR_VERSION-client.jar /opt/phoenix-server/ \
  && mv /opt/phoenix/bin /opt/phoenix-server/bin \
 \
-# Replace hbase's guava 12 jar with the guava 13 jar. Remove when TEPHRA-181 is resolved.
+# Replace hbase's guava 11 jar with the guava 13 jar. Remove when TEPHRA-181 is resolved.
  && rm /opt/hbase/lib/guava-11.0.2.jar \
- && wget -P /opt/hbase/lib https://search.maven.org/remotecontent?filepath=com/google/guava/guava/13.0.1/guava-13.0.1.jar \
+ && wget -O /opt/hbase/lib/guava-13.0.1.jar https://search.maven.org/remotecontent?filepath=com/google/guava/guava/13.0.1/guava-13.0.1.jar \
 \
 # Clean up
  && apk del gnupg openssl tar \
