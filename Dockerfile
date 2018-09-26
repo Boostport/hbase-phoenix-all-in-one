@@ -1,7 +1,7 @@
 FROM openjdk:8-jre-alpine
 MAINTAINER Francis Chuang <francis.chuang@boostport.com>
 
-ENV HBASE_VERSION=2.0.2 HBASE_MINOR_VERSION=2.0 PHOENIX_VERSION=5.0.0
+ENV HBASE_VERSION=2.0.0 HBASE_MINOR_VERSION=2.0 PHOENIX_VERSION=5.0.0
 
 # The busybox wget is broken, so we install a vanilla wget. Remove when resolved.
 # See https://github.com/gliderlabs/docker-alpine/issues/292
@@ -15,10 +15,11 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar wg
  && mkdir -p /opt/phoenix-server \
 \
 # Download HBase
+# TODO: Switch back to mirror site after a Phoenix release is compatible with HBase's CellComparatorImpl
  && wget -O /tmp/KEYS https://www-us.apache.org/dist/hbase/KEYS \
  && gpg --import /tmp/KEYS \
- && wget -q -O /tmp/hbase.tar.gz http://apache.mirror.digitalpacific.com.au/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz \
- && wget -O /tmp/hbase.asc https://www-us.apache.org/dist/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz.asc \
+ && wget -q -O /tmp/hbase.tar.gz https://archive.apache.org/dist/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz \
+ && wget -O /tmp/hbase.asc https://archive.apache.org/dist/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz.asc \
  && gpg --verify /tmp/hbase.asc /tmp/hbase.tar.gz \
  && tar -xzf /tmp/hbase.tar.gz -C /opt/hbase  --strip-components 1 \
 \
