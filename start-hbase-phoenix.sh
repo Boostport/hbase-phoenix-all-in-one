@@ -25,6 +25,8 @@ addConfig $HBASE_SITE "data.tx.snapshot.dir" "/tmp/tephra/snapshots"
 addConfig $HBASE_SITE "data.tx.timeout" "60"
 addConfig $HBASE_SITE "phoenix.transactions.enabled" true
 addConfig $HBASE_SITE "phoenix.schema.isNamespaceMappingEnabled" true
+addConfig $HBASE_SITE "hbase.regionserver.thrift.framed" true
+addConfig $HBASE_SITE "hbase.regionserver.thrift.compact" true
 
 export HBASE_CONF_DIR=/opt/hbase/conf
 export HBASE_CP=/opt/hbase/lib
