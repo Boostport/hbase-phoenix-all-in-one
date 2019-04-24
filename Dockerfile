@@ -16,11 +16,9 @@ RUN apk --no-cache --update add bash ca-certificates gnupg openssl python tar wg
 \
 # Download HBase
 # TODO: Switch back to mirror site after a Phoenix release is compatible with HBase's CellComparatorImpl
- && wget -O /tmp/KEYS https://www-us.apache.org/dist/hbase/KEYS \
- && gpg --import /tmp/KEYS \
+# This is release can no longer be verified because Michael Stack removed his key used to sign this release from the
+# KEYS file on 2019-03-02
  && wget -q -O /tmp/hbase.tar.gz https://archive.apache.org/dist/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz \
- && wget -O /tmp/hbase.asc https://archive.apache.org/dist/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz.asc \
- && gpg --verify /tmp/hbase.asc /tmp/hbase.tar.gz \
  && tar -xzf /tmp/hbase.tar.gz -C /opt/hbase  --strip-components 1 \
 \
 # Download Phoenix
