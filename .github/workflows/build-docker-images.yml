@@ -1,0 +1,72 @@
+on: [push]
+name: Build Docker Images
+jobs:
+  build-docker-images:
+    strategy:
+      matrix:
+        versions:
+          - PHOENIX: 5.0.0
+            HBASE: 2.0.0
+            LATEST: true
+
+          - PHOENIX: 4.14.3
+            HBASE: 1.4.10
+            LATEST: true
+
+          - PHOENIX: 4.14.3
+            HBASE: 1.3.5
+            LATEST: true
+
+          - PHOENIX: 4.13.1
+            HBASE: 1.3.5
+            LATEST: true
+
+        image_name: [boostport/hbase-phoenix-all-in-one]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Build image
+        env:
+          PHOENIX: ${{ matrix.versions.PHOENIX }}
+          HBASE: ${{ matrix.versions.HBASE }}
+          LATEST: ${{ matrix.versions.LATEST }}
+          IMAGE_NAME: ${{ matrix.image_name }}
+        run: |
+          phoenixMinor=$(echo $PHOENIX | grep -o '[[:digit:]]\+\.[[:digit:]]\+')
+
+          tagArguments="-t $IMAGE_NAME:$HBASE-$PHOENIX"
+
+          if [ "$LATEST" == "true" ]; then
+            hbaseMinor=$(echo $HBASE | grep -o '[[:digit:]]\+\.[[:digit:]]\+')
+
+            tagArguments="$tagArguments -t $IMAGE_NAME:$hbaseMinor-$phoenixMinor"
+          fi
+
+          docker build $tagArguments --build-arg HBASE_VERSION=$HBASE --build-arg PHOENIX_VERSION=$PHOENIX $phoenixMinor/
+
+      - name: Push images
+        env:
+          PHOENIX: ${{ matrix.versions.PHOENIX }}
+          HBASE: ${{ matrix.versions.HBASE }}
+          LATEST: ${{ matrix.versions.LATEST }}
+          IMAGE_NAME: ${{ matrix.image_name }}
+          DOCKER_USERNAME: ${{ secrets.docker_hub_username }}
+          DOCKER_PASSWORD: ${{ secrets.docker_hub_password }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+          tags=("$IMAGE_NAME:$HBASE-$PHOENIX")
+
+          if [ "$LATEST" == "true" ]; then
+            phoenixMinor=$(echo $PHOENIX | grep -o '[[:digit:]]\+\.[[:digit:]]\+')
+            hbaseMinor=$(echo $HBASE | grep -o '[[:digit:]]\+\.[[:digit:]]\+')
+
+            tags+=($IMAGE_NAME:$hbaseMinor-$phoenixMinor)
+          fi
+
+          for tag in "${tags[@]}"; do
+            docker push $tag;
+          done
