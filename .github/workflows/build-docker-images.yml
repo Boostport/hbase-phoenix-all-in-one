@@ -21,7 +21,7 @@ jobs:
             HBASE: 1.3.5
             LATEST: true
 
-        image_name: [boostport/hbase-phoenix-all-in-one]
+        image_name: [f21global/hbase-phoenix-all-in-one]
 
     runs-on: ubuntu-latest
 
