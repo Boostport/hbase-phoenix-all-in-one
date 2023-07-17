@@ -21,9 +21,12 @@ jobs:
             HBASE: 1.3.5
             LATEST: true
 
-        image_name: [f21global/hbase-phoenix-all-in-one]
+        image_name: [boostport/hbase-phoenix-all-in-one]
 
     runs-on: ubuntu-latest
+
+    env:
+      REGISTRY: ghcr.io
 
     steps:
       - name: Checkout code
@@ -33,7 +36,7 @@ jobs:
           PHOENIX: ${{ matrix.versions.PHOENIX }}
           HBASE: ${{ matrix.versions.HBASE }}
           LATEST: ${{ matrix.versions.LATEST }}
-          IMAGE_NAME: ${{ matrix.image_name }}
+          IMAGE_NAME: ${{ env.REGISTRY }}/${{ matrix.image_name }}
         run: |
           phoenixMinor=$(echo $PHOENIX | grep -o '[[:digit:]]\+\.[[:digit:]]\+')
 
@@ -47,17 +50,20 @@ jobs:
 
           docker build $tagArguments --build-arg HBASE_VERSION=$HBASE --build-arg PHOENIX_VERSION=$PHOENIX $phoenixMinor/
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Push images
         env:
           PHOENIX: ${{ matrix.versions.PHOENIX }}
           HBASE: ${{ matrix.versions.HBASE }}
           LATEST: ${{ matrix.versions.LATEST }}
-          IMAGE_NAME: ${{ matrix.image_name }}
-          DOCKER_USERNAME: ${{ secrets.docker_hub_username }}
-          DOCKER_PASSWORD: ${{ secrets.docker_hub_password }}
+          IMAGE_NAME: ${{ env.REGISTRY }}/${{ matrix.image_name }}
         run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
           tags=("$IMAGE_NAME:$HBASE-$PHOENIX")
 
           if [ "$LATEST" == "true" ]; then
